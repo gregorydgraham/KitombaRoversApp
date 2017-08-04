@@ -1,6 +1,8 @@
 package nz.co.gregs.kitomba.rovers;
 
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -18,6 +20,8 @@ import java.util.Scanner;
  */
 public class App {
 
+	private static final List<Rover> rovers = new ArrayList<>();
+
 	public static void main(String[] args) throws IncorrectInputException, MoveOutOfBoundsException, MoveWouldCollideWithAnotherRoverException, ParseException, NegativeBoundException {
 
 		Scanner scanner = new Scanner(System.in);
@@ -25,16 +29,27 @@ public class App {
 			scanner = new Scanner(
 					"5 5\n"
 					+ "1 2 N LMLMLMLMM\n"
-					+ "3 3 E MMRMMRMRRM\n"
+					+ "3 3 E MMRMMRMRRM\n\n"
 			);
 		}
+
 		App app = new App();
 		app.readBounds(scanner);
-		Rover firstRover = app.readRover(scanner, "Rover-1");
-		Rover secondRover = app.readRover(scanner, "Rover-2");
+		for (int index = 1; index > 0; index++) {
+			Rover rover = app.readRover(scanner, "Rover-" + index);
+			if (rover != null) {
+				rovers.add(rover);
+			} else {
+				index = -1;
+			}
+		}
 		System.out.println("MOVE RESULTS");
-		System.out.println(firstRover.executeMoves(new Rover[]{secondRover}));
-		System.out.println(secondRover.executeMoves(new Rover[]{firstRover}));
+		for (Rover rover : rovers) {
+			List<Rover> otherRovers = new ArrayList<>();
+			otherRovers.addAll(rovers);
+			otherRovers.remove(rover);
+			System.out.println(rover.executeMoves(otherRovers.toArray(new Rover[]{})));
+		}
 	}
 
 	Integer maxX = 0;
@@ -91,11 +106,13 @@ public class App {
 	 * Rover with those details.</p>
 	 *
 	 * <p>
-	 * Rover details should be formatted as 2 lines similar to: 1 3 E<br>RMLMMMRM</p>
-	 * 
+	 * Rover details should be formatted as 2 lines similar to: 1 3
+	 * E<br>RMLMMMRM</p>
+	 *
 	 * <p>
-	 * Due to the specification of the test data a single line will also be successfully parsed: 1 3 E RMLMMMRM</p>
-	 * 
+	 * Due to the specification of the test data a single line will also be
+	 * successfully parsed: 1 3 E RMLMMMRM</p>
+	 *
 	 * <p>
 	 * Technically the details must match the regular expression /[0-9]+ [0-9]+
 	 * [NEWS] [LRM]*\/</p>
@@ -116,7 +133,9 @@ public class App {
 		System.out.println(input);
 		// There is a descrepency between the specification and the test data
 		// this IF allows me to handle both cases and remove the incorrect as required
-		if (input.matches("[0-9]+ [0-9]+ [NEWS] [LRM]*")) {
+		if (input.isEmpty()) {
+			return null;
+		} else if (input.matches("[0-9]+ [0-9]+ [NEWS] [LRM]*")) {
 
 			String[] values = input.split(" ");
 			// Parse all the values before creating the rover, to help with debugging
@@ -139,7 +158,7 @@ public class App {
 				String moves = input;
 				// Create the new rover with its intended moves
 				return new Rover(roverName, x, y, direction, maxX, maxY, moves);
-			}else{
+			} else {
 				throw new IncorrectInputException("Input is \"" + input + "\" but was expecting a series of movement instructions matching the pattern /[LRM]*/");
 			}
 		}
