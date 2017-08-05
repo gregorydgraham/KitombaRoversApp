@@ -118,4 +118,40 @@ public class AppTest {
 		}
 	}
 
+	/**
+	 * Test of readRover method, of class App.
+	 *
+	 * @throws nz.co.gregs.kitomba.rovers.IncorrectInputException
+	 * @throws java.text.ParseException
+	 */
+	@Test
+	public void testReadRoverWithBadInstructions() throws IncorrectInputException, ParseException {
+		App instance = new App();
+		instance.maxX = 5;
+		instance.maxY = 5;
+		String roverName = "Rover-1";
+		Object[][] tests = new Object[][]{
+			new Object[]{" 1 2 N LMLMLMLMM", new Rover("Rover-1", 1, 2, Direction.N, 5, 5, "LMLMLMLMM")},
+			new Object[]{"3 3 E MMRMMRMRRM ", new Rover("Rover-1", 3, 3, Direction.E, 5, 5, "MMRMMRMRRM")},
+			new Object[]{" 1 2 N\nLMLMLMLMM", new Rover("Rover-1", 1, 2, Direction.N, 5, 5, "LMLMLMLMM")},
+			new Object[]{"3 3 E \nMMRMMRMRRM", new Rover("Rover-1", 3, 3, Direction.E, 5, 5, "MMRMMRMRRM")},
+			new Object[]{"1 2 N\n LMLMLMLMM", new Rover("Rover-1", 1, 2, Direction.N, 5, 5, "LMLMLMLMM")},
+			new Object[]{"3 3 E\nMMRMMRMRRM ", new Rover("Rover-1", 3, 3, Direction.E, 5, 5, "MMRMMRMRRM")}
+		};
+		for (Object[] test : tests) {
+			final String input = (String) test[0];
+			Scanner scanner = new Scanner(input);
+			Rover expected = (Rover) test[1];
+			try {
+				Rover actual = instance.readRover(scanner, roverName);
+				Assert.fail("The input \"" + input + "\" should have thrown an IncorrectInputException");
+			} catch (IncorrectInputException exp) {
+				exp.printStackTrace();
+			} catch (Exception exc) {
+				exc.printStackTrace();
+				Assert.fail("The input \"" + input + "\" should have thrown an IncorrectInputException");
+			}
+		}
+	}
+
 }

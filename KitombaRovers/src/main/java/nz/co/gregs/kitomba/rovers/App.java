@@ -2,6 +2,7 @@ package nz.co.gregs.kitomba.rovers;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
@@ -131,11 +132,14 @@ public class App {
 		// Get the rover line, which should be rover's location, heading, and moves
 		String input = scanner.nextLine();
 		System.out.println(input);
+		final String allLegalMoves = Arrays.toString(Move.values()).replaceAll("[\\]\\[, ]", "");
+		
+		System.out.println(allLegalMoves);
 		// There is a descrepency between the specification and the test data
 		// this IF allows me to handle both cases and remove the incorrect as required
 		if (input.isEmpty()) {
 			return null;
-		} else if (input.matches("[0-9]+ [0-9]+ [NEWS] [LRM]*")) {
+		} else if (input.matches("^[0-9]+ [0-9]+ [NEWS] ["+allLegalMoves+"]+$")) {
 
 			String[] values = input.split(" ");
 			// Parse all the values before creating the rover, to help with debugging
@@ -145,7 +149,7 @@ public class App {
 			String moves = values[3];
 			// Create the new rover with its intended moves
 			return new Rover(roverName, x, y, direction, maxX, maxY, moves);
-		} else if (input.matches("[0-9]+ [0-9]+ [NEWS]")) {
+		} else if (input.matches("^[0-9]+ [0-9]+ [NEWS]$")) {
 
 			String[] values = input.split(" ");
 			// Parse all the values before creating the rover, to help with debugging
@@ -154,7 +158,7 @@ public class App {
 			Direction direction = Direction.parseDirection(values[2]);
 
 			input = scanner.nextLine();
-			if (input.matches("[LRM]*")) {
+			if (input.matches("^["+allLegalMoves+"]+$")) {
 				String moves = input;
 				// Create the new rover with its intended moves
 				return new Rover(roverName, x, y, direction, maxX, maxY, moves);

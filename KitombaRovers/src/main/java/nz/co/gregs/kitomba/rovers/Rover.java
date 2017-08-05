@@ -27,7 +27,7 @@ public class Rover {
 	private int y = 0;
 	private Direction facing = Direction.N;
 	private String moves = "";
-
+	
 	// MaxX & MaxY could be uninitialised and final
 	// but I prefer to avoid uninitialised variables
 	private int maxX = 0;
@@ -118,17 +118,7 @@ public class Rover {
 		}
 		while (queue.peek() != null) {
 			Character instruction = queue.poll();
-			switch (instruction) {
-				case 'L':
-					this.turnLeft();
-					break;
-				case 'R':
-					this.turnRight();
-					break;
-				case 'M':
-					this.moveForward(otherRovers);
-					break;
-			}
+			Move.valueOf(""+instruction).move(this, otherRovers);
 			StringBuilder str = new StringBuilder();
 			Character[] remainingInstructions = queue.toArray(new Character[]{});
 			for (Character c : remainingInstructions) {
