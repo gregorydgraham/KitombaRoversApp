@@ -134,7 +134,6 @@ public class App {
 		System.out.println(input);
 		final String allLegalMoves = Arrays.toString(Move.values()).replaceAll("[\\]\\[, ]", "");
 		
-		System.out.println(allLegalMoves);
 		// There is a descrepency between the specification and the test data
 		// this IF allows me to handle both cases and remove the incorrect as required
 		if (input.isEmpty()) {
