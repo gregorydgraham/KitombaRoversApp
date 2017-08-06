@@ -86,7 +86,7 @@ public class App {
 		//if (scanner.hasNext()) {
 		// Get the first line, which should be 2 integers
 		String input = scanner.nextLine();
-		System.out.println(input);
+		System.out.println("<" + input);
 		if (!input.matches("[-0-9]+ [-0-9]+")) {
 			throw new IncorrectInputException("Input is \"" + input + "\" but was expecting 2 integers separated by a space");
 		}
@@ -131,14 +131,14 @@ public class App {
 		System.out.println("Enter " + roverName + ">");
 		// Get the rover line, which should be rover's location, heading, and moves
 		String input = scanner.nextLine();
-		System.out.println(input);
+		System.out.println("<" + input);
 		final String allLegalMoves = Arrays.toString(Move.values()).replaceAll("[\\]\\[, ]", "");
-		
+
 		// There is a descrepency between the specification and the test data
 		// this IF allows me to handle both cases and remove the incorrect as required
 		if (input.isEmpty()) {
 			return null;
-		} else if (input.matches("^[0-9]+ [0-9]+ [NEWS] ["+allLegalMoves+"]+$")) {
+		} else if (input.matches("^[0-9]+ [0-9]+ [NEWS] [" + allLegalMoves + "]+$")) {
 
 			String[] values = input.split(" ");
 			// Parse all the values before creating the rover, to help with debugging
@@ -157,7 +157,8 @@ public class App {
 			Direction direction = Direction.parseDirection(values[2]);
 
 			input = scanner.nextLine();
-			if (input.matches("^["+allLegalMoves+"]+$")) {
+			System.out.println("<" + input);
+			if (input.matches("^[" + allLegalMoves + "]+$")) {
 				String moves = input;
 				// Create the new rover with its intended moves
 				return new Rover(roverName, x, y, direction, maxX, maxY, moves);
